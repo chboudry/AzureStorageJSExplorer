@@ -1,0 +1,10 @@
+export const config = {
+  appId: "<applicationId",
+  authority:
+    "https://login.microsoftonline.com/<tenantID>",
+  redirectUri: "https://<storageaccoutnameprimaryendpoint>",
+  scopes: [
+    "https://graph.microsoft.com/user.read",
+    "https://graph.microsoft.com/calendars.read",
+  ],
+};
