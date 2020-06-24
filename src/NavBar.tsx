@@ -106,17 +106,6 @@ export default class NavBar extends React.Component<NavBarProps, NavBarState> {
 
   render() {
     // Only show calendar nav item if logged in
-    let calendarLink = null;
-    if (this.props.isAuthenticated) {
-      calendarLink = (
-        <NavItem>
-          <RouterNavLink to="/calendar" className="nav-link" exact>
-            Calendar
-          </RouterNavLink>
-        </NavItem>
-      );
-    }
-
     let containersLink = null;
     if (this.props.isAuthenticated) {
       containersLink = (
@@ -141,13 +130,12 @@ export default class NavBar extends React.Component<NavBarProps, NavBarState> {
                     Home
                   </RouterNavLink>
                 </NavItem>
-                {calendarLink}
                 {containersLink}
               </Nav>
               <Nav className="justify-content-end" navbar>
                 <NavItem>
                   <NavLink
-                    href="https://developer.microsoft.com/graph/docs/concepts/overview"
+                    href="https://github.com/chboudry/AzureStorageJSExplorer/"
                     target="_blank"
                   >
                     <i className="fas fa-external-link-alt mr-1"></i>

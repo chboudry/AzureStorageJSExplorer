@@ -1,39 +1,27 @@
 import React from "react";
 import { Table } from "reactstrap";
-import moment from "moment";
-import { Event } from "microsoft-graph";
-import { config } from "./Config";
-import { getEvents } from "./GraphService";
 import withAuthProvider, { AuthComponentProps } from "./AuthProvider";
+import { getContainers } from "./StorageService";
 
-interface ContainersState {
-  events: Event[];
+interface ContainerState {
+  _containers: string[];
 }
 
-// Helper function to format Graph date/time
-function formatDateTime(dateTime: string | undefined) {
-  if (dateTime !== undefined) {
-    return moment.utc(dateTime).local().format("M/D/YY h:mm A");
-  }
-}
-
-class Containers extends React.Component<AuthComponentProps, ContainersState> {
+//extends React.Component<AuthComponentProps, ContainersState>
+class Containers extends React.Component<AuthComponentProps, ContainerState> {
   constructor(props: any) {
     super(props);
 
     this.state = {
-      events: [],
+      _containers: [],
     };
   }
 
   async componentDidMount() {
     try {
-      // Get the user's access token
-      var accessToken = await this.props.getAccessToken(config.scopes);
-      // Get the user's events
-      var events = await getEvents(accessToken);
-      // Update the array of events in state
-      this.setState({ events: events.value });
+      var containers = await getContainers();
+      // Update the array of containers in state
+      this.setState({ _containers: containers });
     } catch (err) {
       this.props.setError("ERROR", JSON.stringify(err));
     }
@@ -47,20 +35,14 @@ class Containers extends React.Component<AuthComponentProps, ContainersState> {
         <Table>
           <thead>
             <tr>
-              <th scope="col">Containers</th>
-              <th scope="col">Subject</th>
-              <th scope="col">Start</th>
-              <th scope="col">End</th>
+              <th scope="col">Name</th>
             </tr>
           </thead>
           <tbody>
-            {this.state.events.map(function (event: Event) {
+            {this.state._containers.map(function (container: string) {
               return (
-                <tr key={event.id}>
-                  <td>{event.organizer?.emailAddress?.name}</td>
-                  <td>{event.subject}</td>
-                  <td>{formatDateTime(event.start?.dateTime)}</td>
-                  <td>{formatDateTime(event.end?.dateTime)}</td>
+                <tr key={container}>
+                  <td>{container}</td>
                 </tr>
               );
             })}
@@ -73,3 +55,4 @@ class Containers extends React.Component<AuthComponentProps, ContainersState> {
 }
 
 export default withAuthProvider(Containers);
+//export default withAuthProvider(Containers);

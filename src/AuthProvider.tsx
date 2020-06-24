@@ -80,7 +80,6 @@ export default function withAuthProvider<
 
     async login() {
       try {
-        debugger;
         // Login via popup
         await this.userAgentApplication.loginPopup({
           scopes: config.scopes,
@@ -102,7 +101,6 @@ export default function withAuthProvider<
     }
 
     async getAccessToken(scopes: string[]): Promise<string> {
-      debugger;
       try {
         // Get the access token silently
         // If the cache contains a non-expired token, this function
@@ -114,11 +112,9 @@ export default function withAuthProvider<
 
         return silentResult.accessToken;
       } catch (err) {
-        debugger;
         // If a silent request fails, it may be because the user needs
         // to login or grant consent to one or more of the requested scopes
         if (this.isInteractionRequired(err)) {
-          debugger;
           var interactiveResult = await this.userAgentApplication.acquireTokenPopup(
             {
               scopes: scopes,
@@ -127,7 +123,6 @@ export default function withAuthProvider<
 
           return interactiveResult.accessToken;
         } else {
-          debugger;
           throw err;
         }
       }

@@ -7,7 +7,6 @@ import withAuthProvider, { AuthComponentProps } from "./AuthProvider";
 import NavBar from "./NavBar";
 import ErrorMessage from "./ErrorMessage";
 import Welcome from "./Welcome";
-import Calendar from "./Calendar";
 import Containers from "./Containers";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -47,17 +46,6 @@ class App extends Component<AuthComponentProps> {
                   authButtonMethod={this.props.login}
                 />
               )}
-            />
-            <Route
-              exact
-              path="/calendar"
-              render={(props) =>
-                this.props.isAuthenticated ? (
-                  <Calendar {...props} />
-                ) : (
-                  <Redirect to="/" />
-                )
-              }
             />
             <Route
               exact
