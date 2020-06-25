@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+import * as msal from "msal";
 import React from "react";
 import { UserAgentApplication } from "msal";
+import { AccessToken, GetTokenOptions } from "@azure/core-http";
 
 import { config } from "./Config";
 import { getUserDetails } from "./GraphService";
@@ -13,6 +15,7 @@ export interface AuthComponentProps {
   login: Function;
   logout: Function;
   getAccessToken: Function;
+  getToken: Function; //test
   setError: Function;
 }
 
@@ -69,6 +72,7 @@ export default function withAuthProvider<
           login={() => this.login()}
           logout={() => this.logout()}
           getAccessToken={(scopes: string[]) => this.getAccessToken(scopes)}
+          getToken={(scopes: string[]) => this.getToken(scopes)}
           setError={(message: string, debug: string) =>
             this.setErrorMessage(message, debug)
           }
@@ -126,6 +130,92 @@ export default function withAuthProvider<
           throw err;
         }
       }
+    }
+
+    //test
+    //added to comply with Storage api
+    async getToken(
+      scopes: string | string[],
+      options?: GetTokenOptions
+    ): Promise<AccessToken | null> {
+      /*const { span } = createSpan(
+        "InteractiveBrowserCredential-getToken",
+        options
+      );*/
+      try {
+        if (!this.userAgentApplication.getAccount()) {
+          await this.login();
+        }
+
+        const authResponse = await this.acquireToken({
+          scopes: Array.isArray(scopes) ? scopes : scopes.split(","),
+        });
+
+        if (authResponse) {
+          return {
+            token: authResponse.accessToken,
+            expiresOnTimestamp: authResponse.expiresOn.getTime(),
+          };
+        } else {
+          return null;
+        }
+      } catch (err) {
+        /* span.setStatus({
+          code: CanonicalCode.UNKNOWN,
+          message: err.message,
+        });*/
+        throw err;
+      } finally {
+        //span.end();
+      }
+    }
+
+    private async acquireToken(
+      authParams: msal.AuthenticationParameters
+    ): Promise<msal.AuthResponse | undefined> {
+      let authResponse: msal.AuthResponse | undefined;
+      try {
+        //logger.info("InteractiveBrowserCredential: attempting to acquire token silently");
+        authResponse = await this.userAgentApplication.acquireTokenSilent(
+          authParams
+        );
+      } catch (err) {
+        if (err instanceof msal.AuthError) {
+          switch (err.errorCode) {
+            case "consent_required":
+            case "interaction_required":
+            case "login_required":
+              /*logger.warning(
+                `InteractiveBrowserCredential: authentication returned errorCode ${err.errorCode}`
+              );*/
+              break;
+            default:
+              // logger.warning(`InteractiveBrowserCredential: failed to acquire token: ${err}`);
+              throw err;
+          }
+        }
+      }
+
+      let authPromise: Promise<msal.AuthResponse> | undefined;
+      if (authResponse === undefined) {
+        /*logger.warning(
+          `InteractiveBrowserCredential: silent authentication failed, falling back to interactive method ${this.loginStyle}`
+        );*/
+        /*switch (this.loginStyle) {
+          case "redirect":*/
+        /*authPromise = new Promise((resolve, reject) => {
+              this.userAgentApplication.handleRedirectCallback(resolve, reject);
+            });
+            this.userAgentApplication.acquireTokenRedirect(authParams);
+            break;*/
+        //case "popup":
+        authPromise = this.userAgentApplication.acquireTokenPopup(authParams);
+        //break;
+        //}
+
+        authResponse = authPromise && (await authPromise);
+      }
+      return authResponse;
     }
 
     // <getUserProfileSnippet>

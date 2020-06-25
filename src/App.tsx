@@ -7,7 +7,8 @@ import withAuthProvider, { AuthComponentProps } from "./AuthProvider";
 import NavBar from "./NavBar";
 import ErrorMessage from "./ErrorMessage";
 import Welcome from "./Welcome";
-import Containers from "./Containers";
+import StorageContainers from "./StorageContainers";
+import StorageContainer from "./StorageContainer";
 import "bootstrap/dist/css/bootstrap.css";
 
 class App extends Component<AuthComponentProps> {
@@ -48,11 +49,21 @@ class App extends Component<AuthComponentProps> {
               )}
             />
             <Route
+              path="/container/:containername"
+              render={(props) =>
+                this.props.isAuthenticated ? (
+                  <StorageContainer {...props} />
+                ) : (
+                  <Redirect to="/" />
+                )
+              }
+            />
+            <Route
               exact
               path="/containers"
               render={(props) =>
                 this.props.isAuthenticated ? (
-                  <Containers {...props} />
+                  <StorageContainers {...props} />
                 ) : (
                   <Redirect to="/" />
                 )

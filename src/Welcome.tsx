@@ -41,10 +41,10 @@ export default class Welcome extends React.Component<
   render() {
     return (
       <Jumbotron>
-        <h1>React Graph Tutorial</h1>
+        <h1>Azure Storage Js Explorer</h1>
         <p className="lead">
-          This sample app shows how to use the Microsoft Graph API to access
-          Outlook and OneDrive data from React
+          This application provides a read only access to your Azure Storage
+          Account Containers using Azure Active Directory Authentication.
         </p>
         <WelcomeContent
           isAuthenticated={this.props.isAuthenticated}

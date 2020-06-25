@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Azure Storage Js Explorer",
+  "name": "Azure Storage Js Explorer",
   "icons": [
     {
       "src": "favicon.ico",
