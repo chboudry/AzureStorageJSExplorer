@@ -5,7 +5,7 @@ import { getBlobsFromContainer } from "./StorageService";
 import { Link } from "react-router-dom";
 
 interface ContainerState {
-  _containers: string[];
+  _blobs: string[];
   _containername: string;
 }
 
@@ -17,17 +17,20 @@ class StorageContainer extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
-      _containers: [],
-      _containername: props.containername,
+      _blobs: [],
+      _containername: props.match.params.containername,
     };
   }
 
   async componentDidMount() {
     try {
       // from the path '/course/:slug'
-      // var containers = await getBlobsFromContainer(this.state._containername);
+      var blobs = await getBlobsFromContainer(
+        this.props,
+        this.state._containername
+      );
       // Update the array of containers in state
-      //this.setState({ _containers: containers });
+      this.setState({ _blobs: blobs });
     } catch (err) {
       this.props.setError("ERROR", JSON.stringify(err));
     }
@@ -37,7 +40,9 @@ class StorageContainer extends React.Component<
   render() {
     return (
       <div>
-        <h1>Blobs</h1>
+        <h1>{this.state._containername}</h1>
+        <br />
+        <h2>Blobs</h2>
         <Table>
           <thead>
             <tr>
@@ -45,11 +50,11 @@ class StorageContainer extends React.Component<
             </tr>
           </thead>
           <tbody>
-            {this.state._containers.map(function (container: string) {
+            {this.state._blobs.map(function (blob: string) {
               return (
-                <tr key={container}>
+                <tr key={blob}>
                   <td>
-                    <Link to={"/container/" + container}>{container}</Link>
+                    <Link to={"/container/" + blob}>{blob}</Link>
                   </td>
                 </tr>
               );
