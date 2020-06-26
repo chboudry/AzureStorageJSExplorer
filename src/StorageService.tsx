@@ -1,6 +1,5 @@
-//import { config } from "./Config";
-//import { InteractiveBrowserCredential } from "@azure/identity";
 import { BlobServiceClient } from "@azure/storage-blob";
+import { StorageBlob } from "./StorageContainer";
 
 export async function getContainers(props: any) {
   var BlobClient = new BlobServiceClient(
@@ -22,9 +21,14 @@ export async function getBlobsFromContainer(props: any, containername: string) {
   );
 
   var containerClient = BlobClient.getContainerClient(containername);
-  let _chaine: string[] = [];
+  let _chaine: StorageBlob[] = [];
   for await (const blob of containerClient.listBlobsFlat()) {
-    _chaine.push(blob.name);
+    var obj = {
+      containername: containername,
+      blobname: blob.name,
+      blobsize: blob.properties.contentLength,
+    };
+    _chaine.push(obj);
   }
   return _chaine;
 }

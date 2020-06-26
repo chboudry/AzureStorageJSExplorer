@@ -1,11 +1,17 @@
 import React from "react";
-import { Table } from "reactstrap";
+import { Table, Container } from "reactstrap";
 import withAuthProvider, { AuthComponentProps } from "./AuthProvider";
 import { getBlobsFromContainer } from "./StorageService";
 import { Link } from "react-router-dom";
 
+export interface StorageBlob {
+  containername: String;
+  blobname: string;
+  blobsize: number | undefined;
+}
+
 interface ContainerState {
-  _blobs: string[];
+  _blobs: StorageBlob[];
   _containername: string;
 }
 
@@ -30,7 +36,7 @@ class StorageContainer extends React.Component<
         this.state._containername
       );
       // Update the array of containers in state
-      this.setState({ _blobs: blobs });
+      this.setState({ _blobs: [...this.state._blobs, ...blobs] });
     } catch (err) {
       this.props.setError("ERROR", JSON.stringify(err));
     }
@@ -47,15 +53,23 @@ class StorageContainer extends React.Component<
           <thead>
             <tr>
               <th scope="col">Name</th>
+              <th scope="col">Size</th>
             </tr>
           </thead>
           <tbody>
-            {this.state._blobs.map(function (blob: string) {
+            {this.state._blobs.map(function (blob: StorageBlob) {
               return (
-                <tr key={blob}>
+                <tr key={blob.blobname}>
                   <td>
-                    <Link to={"/container/" + blob}>{blob}</Link>
+                    <Link
+                      to={
+                        "/container/" + blob.containername + "/" + blob.blobname
+                      }
+                    >
+                      {blob.blobname}
+                    </Link>
                   </td>
+                  <td>{blob.blobsize}</td>
                 </tr>
               );
             })}
