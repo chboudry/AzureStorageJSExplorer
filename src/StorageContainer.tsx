@@ -1,11 +1,10 @@
 import React from "react";
-import { Table, Container } from "reactstrap";
+import { Table } from "reactstrap";
 import withAuthProvider, { AuthComponentProps } from "./AuthProvider";
-import { getBlobsFromContainer } from "./StorageService";
-import { Link } from "react-router-dom";
+import { getBlobsFromContainer, downloadBlob } from "./StorageService";
 
 export interface StorageBlob {
-  containername: String;
+  containername: string;
   blobname: string;
   blobsize: number | undefined;
 }
@@ -13,6 +12,7 @@ export interface StorageBlob {
 interface ContainerState {
   _blobs: StorageBlob[];
   _containername: string;
+  // _props: any;
 }
 
 //extends React.Component<AuthComponentProps, ContainersState>
@@ -24,6 +24,7 @@ class StorageContainer extends React.Component<
     super(props);
     this.state = {
       _blobs: [],
+      // _props: null,
       _containername: props.match.params.containername,
     };
   }
@@ -36,6 +37,7 @@ class StorageContainer extends React.Component<
         this.state._containername
       );
       // Update the array of containers in state
+      //  this.setState({ _props: this.props });
       this.setState({ _blobs: [...this.state._blobs, ...blobs] });
     } catch (err) {
       this.props.setError("ERROR", JSON.stringify(err));
@@ -57,22 +59,26 @@ class StorageContainer extends React.Component<
             </tr>
           </thead>
           <tbody>
-            {this.state._blobs.map(function (blob: StorageBlob) {
+            {this.state._blobs.map((blob: StorageBlob) => {
               return (
                 <tr key={blob.blobname}>
                   <td>
-                    <Link
-                      to={
-                        "/container/" + blob.containername + "/" + blob.blobname
+                    <p
+                      onClick={() =>
+                        downloadBlob(
+                          this.props,
+                          blob.containername,
+                          blob.blobname
+                        )
                       }
                     >
                       {blob.blobname}
-                    </Link>
+                    </p>
                   </td>
                   <td>{blob.blobsize}</td>
                 </tr>
               );
-            })}
+            }, this)}
           </tbody>
         </Table>
       </div>
