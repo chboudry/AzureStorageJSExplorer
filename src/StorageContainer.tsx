@@ -63,7 +63,8 @@ class StorageContainer extends React.Component<
               return (
                 <tr key={blob.blobname}>
                   <td>
-                    <p
+                    <div
+                      className="btn btn-link"
                       onClick={() =>
                         downloadBlob(
                           this.props,
@@ -73,7 +74,7 @@ class StorageContainer extends React.Component<
                       }
                     >
                       {blob.blobname}
-                    </p>
+                    </div>
                   </td>
                   <td>{blob.blobsize}</td>
                 </tr>
