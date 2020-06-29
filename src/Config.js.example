@@ -7,4 +7,5 @@ export const config = {
     "https://graph.microsoft.com/user.read",
     "https://graph.microsoft.com/calendars.read",
   ],
+  storageAccount: "https://demostorageaccount.blob.core.windows.net",
 };
