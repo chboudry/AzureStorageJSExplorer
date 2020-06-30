@@ -19,6 +19,8 @@ The following solution intends to be :
 - close to free : there is no back end servers and the website is host on the storage account itself
 - easy to use for end user -no installation steps for them- just an url.
 
+Additionally you can also choose to use this as an example to use the storage API with an AAD Token.
+
 Please note this solution provides read-only access only for now.
 
 ## Installation steps
