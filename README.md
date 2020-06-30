@@ -2,6 +2,8 @@
 
 This project intends to display an Azure Storage Explorer as a static website in one Azure Storage Account
 
+![image](https://github.com/chboudry/AzureStorageJSExplorer/doc/assets/Azurestoragejsexplorerscreenshot.png)
+
 ## Context
 
 Per the Microsoft documentation, Azure AD Authentication should be your privileged way to access storage account blob.
