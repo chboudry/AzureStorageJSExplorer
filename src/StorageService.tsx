@@ -41,7 +41,6 @@ export async function downloadBlob(
   blockBlobClient
     .download()
     .then((resp) => {
-      debugger;
       return resp.blobBody;
     })
     .then((blob) => {
