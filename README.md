@@ -2,7 +2,7 @@
 
 This project intends to display an Azure Storage Explorer as a static website in one Azure Storage Account
 
-![image](https://github.com/chboudry/AzureStorageJSExplorer/doc/assets/Azurestoragejsexplorerscreenshot.png)
+![image](https://github.com/chboudry/AzureStorageJSExplorer/blob/master/doc/assets/Azurestoragejsexplorerscreenshot.png)
 
 ## Context
 
